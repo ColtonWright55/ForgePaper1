@@ -1,7 +1,6 @@
 \documentclass{article}
 
 
-
 \usepackage{arxiv}
 
 \usepackage[utf8]{inputenc} % allow utf-8 input
@@ -9,6 +8,7 @@
 \usepackage{hyperref}       % hyperlinks
 \usepackage{url}            % simple URL typesetting
 \usepackage{booktabs}       % professional-quality tables
+\usepackage{amsmath}        % math environments and \text{}
 \usepackage{amsfonts}       % blackboard math symbols
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
@@ -16,51 +16,48 @@
 \usepackage{graphicx}
 \usepackage{natbib}
 \usepackage{doi}
+\usepackage{todonotes}
 
 
-
-\title{A template for the \emph{arxiv} style}
+\title{Agility Forge Policy Paper 1}
 
 %\date{September 9, 1985}	% Here you can change the date presented in the paper title
 %\date{} 					% Or removing it
 
-\author{ \href{https://orcid.org/0000-0000-0000-0000}{\includegraphics[scale=0.06]{orcid.pdf}\hspace{1mm}David S.~Hippocampus}\thanks{Use footnote for providing further
-		information about author (webpage, alternative
-		address)---\emph{not} for acknowledging funding agencies.} \\
-	Department of Computer Science\\
-	Cranberry-Lemon University\\
-	Pittsburgh, PA 15213 \\
-	\texttt{hippo@cs.cranberry-lemon.edu} \\
-	%% examples of more authors
+\author{Colton Wright\\
+	Department of Mechanical and Aerospace Engineering\\
+	The Ohio State University\\
+	Columbus, OH 43210 \\
+	\texttt{wright.2135@buckeyemail.osu.edu} \\
 	\And
-	\href{https://orcid.org/0000-0000-0000-0000}{\includegraphics[scale=0.06]{orcid.pdf}\hspace{1mm}Elias D.~Striatum} \\
-	Department of Electrical Engineering\\
-	Mount-Sheikh University\\
-	Santa Narimana, Levand \\
-	\texttt{stariate@ee.mount-sheikh.edu} \\
-	%% \AND
-	%% Coauthor \\
-	%% Affiliation \\
-	%% Address \\
-	%% \texttt{email} \\
-	%% \And
-	%% Coauthor \\
-	%% Affiliation \\
-	%% Address \\
-	%% \texttt{email} \\
-	%% \And
-	%% Coauthor \\
-	%% Affiliation \\
-	%% Address \\
-	%% \texttt{email} \\
+	Josh \\
+	Affiliation \\
+	Address \\
+	\texttt{email} \\
+	\And
+	Brian \\
+	Affiliation \\
+	Address \\
+	\texttt{email} \\
+	\And
+	Glenn \\
+	Affiliation \\
+	Address \\
+	\texttt{email} \\
+	\And
+	Michael Groeber\\
+	Department of Integrated Systems Engineering\\
+	The Ohio State University\\
+	Columbus, OH 43210 \\
+	\texttt{groeber.9@osu.edu} \\
 }
 
 % Uncomment to remove the date
 %\date{}
 
 % Uncomment to override  the `A preprint' in the header
-%\renewcommand{\headeright}{Technical Report}
-%\renewcommand{\undertitle}{Technical Report}
+\renewcommand{\headeright}{Technical Report}
+\renewcommand{\undertitle}{Technical Report}
 \renewcommand{\shorttitle}{\textit{arXiv} Template}
 
 %%% Add PDF metadata to help others organize their library
@@ -77,122 +74,81 @@ pdfkeywords={First keyword, Second keyword, More},
 \maketitle
 
 \begin{abstract}
-	\lipsum[1]
+	TODO
+	% \lipsum[1]
 \end{abstract}
 
 
 % keywords can be removed
-\keywords{First keyword \and Second keyword \and More}
+% \keywords{First keyword \and Second keyword \and More}
 
+\noindent\hrulefill\quad Paper Outline \quad\hrulefill
+\begin{itemize}
+
+    \item Introduction
+    \begin{itemize}
+        \item Hot forging is a highly nonlinear, temperature dependent, viscoplastic process. Material behavior is dependent upon temperature, strain, and strain rate. The material state is difficult to measure, and physics based process simulations are typically expensive to evaluate. Designing a controller for an incremental forging process is difficult if all these effects are considered. However, in practice, forging experiments show that the process is repeatible, and that heuristical control can achieve accurate target geometries under certain conditions. If efficiently reaching target geometry is the only concern, many effects can be ignored due to the displacement controlled actuator. Here we outline several control policies and evaluate them on the Agility Forge, a novel robotic incremental forging platform.
+        \begin{itemize}
+			\item Sequential decision making under model uncertainty here. Probably, stochastic optimization should be used to reduce the chance of producing scrap.
+		\end{itemize}
+		\item A few similar / inspiring works are PlasticineLab, DexDeform, and RoPotter,\citep{huang_plasticinelab_2021, li_dexdeform_2023, yoo_ropotter_2024} which attempt to solve control problems consisting of deforming a soft body into some target shape. Typically some fast-acting surrogate / deformation model is learned and standard RL techniques (PPO) are deemed insufficient, as there are infinite degrees of freedom in a soft body (The agent will never accidentally fold the body into a dumpling on accident) (more research). Similar to RoPotter, who says that "structural priors specific to the task of pottery-making can be exploited to simplify the pottery skill-learning process", we can exploit some priors (domain knowledge) of our forging process to create heuristic based controllers. The controllers outlined in this paper are only useful for cogging with a narrow action space, we cannot yet solve this generalized forging problem. Probably some general RL method is needed: future work.
+    \end{itemize}
+
+    \item Methods
+    \begin{itemize}
+        \item Quickly cover the slab billet surrogate modelling method, find some sources which derive something similar.
+        \item Outline $\pi_3(x_i)$, a heuristic based control policy which reads a state $x_i$ and outputs an action sequence. This is a pretty straightfoward policy \& it is inexpensive to evaluate.
+        \begin{itemize}
+			\item TODO: Pseudocode?
+		\end{itemize}
+		\item Outline the $\text{MPC}_{\text{Slab Billet}}$. This MPC might solve our round $\rightarrow$ square overpress problem, but probably should be seeded by $\pi_3(x_i)$ to give a reasonable guess / prune the search space. It is possible that SlabBillet and a well-suited optimizer could search the entire space if we parallelize SlabBillet.
+        \item Mention $\pi_f$ which generates a finishing pass. This controller typically runs after either $\pi_3$ or $\text{MPC}_{\text{Slab Billet}}$.
+		\item TODO: Should we explain ForgeNet and $\text{MPC}_{\text{ForgeNet}}$ or leave that for another work?
+    \end{itemize}
+
+	\item Results
+	\begin{itemize}
+		\item Show 3 unique targets and their experimental forgings, maybe a set using $\pi_3(x_i)$ and another with $\text{MPC}_{\text{Slab Billet}}$.
+		\item Report Chamfer \& Hausdorff distances for each experiment in a table. Perhaps $\text{MPC}_{\text{Slab Billet}}$ is better, since we don't have decay functions in $\pi_3(x_i)$.	
+		\item Plot some cost over time for both controllers, perhaps $\text{MPC}_{\text{Slab Billet}}$ can reach the target in less time.
+		\item Show a 2D lineplot of a profile of the soft body evolving toward the target over time. Most of the change will happen in the bulk forging passes, and then fine details will be brought in during a finishing pass.
+	\end{itemize}
+
+\end{itemize}
+\noindent\hrulefill
 
 \section{Introduction}
-\lipsum[2]
-\lipsum[3]
+% Some people thought a thing \citep{kour2014real, hadash2018estimate} but other people thought something else \citep{kour2014fast}. Many people have speculated that if we knew exactly why \citet{kour2014fast} thought this\dots
+TODO
 
+% \lipsum[2]
 
-\section{Headings: first level}
-\label{sec:headings}
-
-\lipsum[4] See Section \ref{sec:headings}.
-
-\subsection{Headings: second level}
-\lipsum[5]
 \begin{equation}
 	\xi _{ij}(t)=P(x_{t}=i,x_{t+1}=j|y,v,w;\theta)= {\frac {\alpha _{i}(t)a^{w_t}_{ij}\beta _{j}(t+1)b^{v_{t+1}}_{j}(y_{t+1})}{\sum _{i=1}^{N} \sum _{j=1}^{N} \alpha _{i}(t)a^{w_t}_{ij}\beta _{j}(t+1)b^{v_{t+1}}_{j}(y_{t+1})}}
 \end{equation}
 
-\subsubsection{Headings: third level}
-\lipsum[6]
 
-\paragraph{Paragraph}
-\lipsum[7]
+\todo{TODO}
+% \lipsum[3]
 
+\section{Related Work}
+% \lipsum[4]
+TODO
 
+\section{Methodology}
+% \lipsum[5]
+TODO
 
-\section{Examples of citations, figures, tables, references}
-\label{sec:others}
+\section{Results}
+% \lipsum[6]
+TODO
 
-\subsection{Citations}
-Citations use \verb+natbib+. The documentation may be found at
-\begin{center}
-	\url{http://mirrors.ctan.org/macros/latex/contrib/natbib/natnotes.pdf}
-\end{center}
-
-Here is an example usage of the two main commands (\verb+citet+ and \verb+citep+): Some people thought a thing \citep{kour2014real, hadash2018estimate} but other people thought something else \citep{kour2014fast}. Many people have speculated that if we knew exactly why \citet{kour2014fast} thought this\dots
-
-\subsection{Figures}
-\lipsum[10]
-See Figure \ref{fig:fig1}. Here is how you add footnotes. \footnote{Sample of the first footnote.}
-\lipsum[11]
-
-\begin{figure}
-	\centering
-	\fbox{\rule[-.5cm]{4cm}{4cm} \rule[-.5cm]{4cm}{0cm}}
-	\caption{Sample figure caption.}
-	\label{fig:fig1}
-\end{figure}
-
-\subsection{Tables}
-See awesome Table~\ref{tab:table}.
-
-The documentation for \verb+booktabs+ (`Publication quality tables in LaTeX') is available from:
-\begin{center}
-	\url{https://www.ctan.org/pkg/booktabs}
-\end{center}
-
-
-\begin{table}
-	\caption{Sample table title}
-	\centering
-	\begin{tabular}{lll}
-		\toprule
-		\multicolumn{2}{c}{Part}                   \\
-		\cmidrule(r){1-2}
-		Name     & Description     & Size ($\mu$m) \\
-		\midrule
-		Dendrite & Input terminal  & $\sim$100     \\
-		Axon     & Output terminal & $\sim$10      \\
-		Soma     & Cell body       & up to $10^6$  \\
-		\bottomrule
-	\end{tabular}
-	\label{tab:table}
-\end{table}
-
-\subsection{Lists}
-\begin{itemize}
-	\item Lorem ipsum dolor sit amet
-	\item consectetur adipiscing elit.
-	\item Aliquam dignissim blandit est, in dictum tortor gravida eget. In ac rutrum magna.
-\end{itemize}
-
+\section{Discussion}
+% \lipsum[7]
+TODO
 
 \bibliographystyle{unsrtnat}
-\bibliography{references}  %%% Uncomment this line and comment out the ``thebibliography'' section below to use the external .bib file (using bibtex) .
-
-
-%%% Uncomment this section and comment out the \bibliography{references} line above to use inline references.
-% \begin{thebibliography}{1}
-
-% 	\bibitem{kour2014real}
-% 	George Kour and Raid Saabne.
-% 	\newblock Real-time segmentation of on-line handwritten arabic script.
-% 	\newblock In {\em Frontiers in Handwriting Recognition (ICFHR), 2014 14th
-% 			International Conference on}, pages 417--422. IEEE, 2014.
-
-% 	\bibitem{kour2014fast}
-% 	George Kour and Raid Saabne.
-% 	\newblock Fast classification of handwritten on-line arabic characters.
-% 	\newblock In {\em Soft Computing and Pattern Recognition (SoCPaR), 2014 6th
-% 			International Conference of}, pages 312--318. IEEE, 2014.
-
-% 	\bibitem{hadash2018estimate}
-% 	Guy Hadash, Einat Kermany, Boaz Carmeli, Ofer Lavi, George Kour, and Alon
-% 	Jacovi.
-% 	\newblock Estimate and replace: A novel approach to integrating deep neural
-% 	networks with existing applications.
-% 	\newblock {\em arXiv preprint arXiv:1804.09028}, 2018.
-
-% \end{thebibliography}
+\bibliography{references}
 
 
 \end{document}
